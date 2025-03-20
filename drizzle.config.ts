@@ -1,16 +1,20 @@
-import { config } from 'dotenv';
+import type { Config } from 'drizzle-kit';
 import { defineConfig } from 'drizzle-kit';
+import * as dotenv from 'dotenv';
 
-config({
-  path: '.env.local',
+dotenv.config({
+  path: '.env',
 });
+
+const POSTGRES_URL = process.env.POSTGRES_URL || 'postgres://postgres:postgres@localhost:5432/ai_chatbot';
+
+console.log('Using PostgreSQL URL:', POSTGRES_URL);
 
 export default defineConfig({
   schema: './lib/db/schema.ts',
   out: './lib/db/migrations',
   dialect: 'postgresql',
   dbCredentials: {
-    // biome-ignore lint: Forbidden non-null assertion.
-    url: process.env.POSTGRES_URL!,
+    url: POSTGRES_URL,
   },
 });
